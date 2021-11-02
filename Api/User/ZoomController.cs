@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Holism.Zoom.UserApi
 {
-    public class ZoomController
+    public class ZoomController : HolismController
     {
         //https://marketplace.zoom.us/docs/sdk/native-sdks/web/signature
 
