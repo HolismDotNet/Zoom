@@ -1,12 +1,8 @@
-// this demo use vscode and .NET Core 2.2.5
-// https://docs.microsoft.com/en-us/dotnet/core/tutorials/with-visual-studio-code
-// https://dotnet.microsoft.com/download
-// dotnet add package Microsoft.IdentityModel.Tokens
-// dotnet add package System.IdentityModel.Tokens.Jwt
-// https://www.red-gate.com/simple-talk/dotnet/net-development/jwt-authentication-microservices-net/
-// https://www.jokecamp.com/blog/examples-of-creating-base64-hashes-using-hmac-sha256-in-different-languages/#csharp
-// https://marketplace.zoom.us/docs/sdk/native-sdks/Web-Client-SDK/tutorial/generate-signature
-
+using Holism.Api;
+using Holism.Business;
+using Holism.Logs.Business;
+using Holism.Logs.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -18,6 +14,8 @@ namespace Holism.Zoom.UserApi
 {
     public class ZoomController
     {
+        //https://marketplace.zoom.us/docs/sdk/native-sdks/web/signature
+
         static readonly char[] padding = { '=' };
 
         [HttpGet]
@@ -26,9 +24,9 @@ namespace Holism.Zoom.UserApi
             var apiKey = Config.GetSetting("ZoomApiKey");
             var apiSecret = Config.GetSetting("ZoomApiSecret");
             String timestamp = (ToTimestamp(DateTime.UtcNow.ToUniversalTime()) - 30000).ToString();
-            var role = "1";
+            var role = "1"; // 1 for host, 0 for participant
 
-            string message = String.Format ("{0}{1}{2}{3}", apiKey, meetingNumber, ts, role);
+            string message = String.Format ("{0}{1}{2}{3}", apiKey, meetingNumber, timestamp, role);
             apiSecret = apiSecret ?? "";
             var encoding = new System.Text.ASCIIEncoding ();
             byte[] keyByte = encoding.GetBytes(apiSecret);
@@ -39,9 +37,12 @@ namespace Holism.Zoom.UserApi
             {
                 byte[] hashmessage = hmacsha256.ComputeHash(messageBytes);
                 string msgHash = System.Convert.ToBase64String(hashmessage);
-                string token = String.Format("{0}.{1}.{2}.{3}.{4}", apiKey, meetingNumber, ts, role, msgHash);
+                string token = String.Format("{0}.{1}.{2}.{3}.{4}", apiKey, meetingNumber, timestamp, role, msgHash);
                 var tokenBytes = System.Text.Encoding.UTF8.GetBytes(token);
-                return System.Convert.ToBase64String(tokenBytes).TrimEnd(padding);
+                return new 
+                {
+                    Signature = System.Convert.ToBase64String(tokenBytes).TrimEnd(padding)
+                };
             }
         }
 
