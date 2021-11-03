@@ -24,7 +24,7 @@ namespace Holism.Zoom.UserApi
             var apiKey = Config.GetSetting("ZoomApiKey");
             var apiSecret = Config.GetSetting("ZoomApiSecret");
             String timestamp = (ToTimestamp(DateTime.UtcNow.ToUniversalTime()) - 30000).ToString();
-            var role = "1"; // 1 for host, 0 for participant
+            var role = "0"; // 1 for host, 0 for participant
 
             string message = String.Format ("{0}{1}{2}{3}", apiKey, meetingNumber, timestamp, role);
             apiSecret = apiSecret ?? "";
