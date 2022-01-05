@@ -9,8 +9,8 @@ public class ZoomController : HolismController
     [HttpGet]
     public object GenerateToken(string meetingNumber)
     {
-        var apiKey = Infra.Config.GetSetting("ZoomApiKey");
-        var apiSecret = Infra.Config.GetSetting("ZoomApiSecret");
+        var apiKey = InfraConfig.GetSetting("ZoomApiKey");
+        var apiSecret = InfraConfig.GetSetting("ZoomApiSecret");
         String timestamp = (ToTimestamp(DateTime.UtcNow.ToUniversalTime()) - 30000).ToString();
         var role = "0"; // 1 for host, 0 for participant
 
