@@ -1,4 +1,4 @@
-namespace Holism.Zoom.UserApi;
+namespace Zoom;
 
 public class ZoomController : HolismController
 {
