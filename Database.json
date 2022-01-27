@@ -1,0 +1,13 @@
+{
+    "name": "Zoom",
+    "tables": [
+        {
+            "name": "Meetings",
+            "columns": [
+                {
+                    "name": "ZoomIdentifier"
+                }
+            ]
+        }
+    ]
+}
